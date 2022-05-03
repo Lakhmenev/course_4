@@ -1,5 +1,4 @@
 from sqlalchemy.orm.scoping import scoped_session
-
 from project.dao.models import Genre
 
 
@@ -14,13 +13,8 @@ class GenreDAO:
         return self._db_session.query(Genre).all()
 
     def create(self, genre_d):
-        # ent = Genre(**genre_d)
-        ent = {}
-        ent.name = genre_d.get("name")
-
-        self._db_session.add(ent)
+        self._db_session.add(Genre(**genre_d))
         self._db_session.commit()
-        return ent
 
     def delete(self, pk):
         genre = self.get_by_id(pk)

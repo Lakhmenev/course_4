@@ -1,5 +1,5 @@
 from sqlalchemy.orm.scoping import scoped_session
-# from models.base import BaseMixin
+
 from project.dao.models import Movie
 
 
@@ -10,24 +10,29 @@ class MovieDAO:
     def get_by_id(self, pk):
         return self._db_session.query(Movie).filter(Movie.id == pk).one_or_none()
 
-    def get_all(self):
-        return self._db_session.query(Movie).all()
+    def get_all(self, data_filter):
+        movies = self._db_session.query(Movie)
+
+        year = data_filter.get('year')
+
+        if year is not None:
+            movies = movies.filter(Movie.year == year)
+
+        director_id = data_filter.get('director_id')
+
+        if director_id is not None:
+            movies = movies.filter(Movie.director_id == director_id)
+
+        genre_id = data_filter.get('genre_id')
+
+        if genre_id is not None:
+            movies = movies.filter(Movie.genre_id == genre_id)
+
+        return movies.all()
 
     def create(self, movie_d):
-        # ent = Movie(**movie_d)
-        movie = {}
-
-        movie.title = movie_d.get("title")
-        movie.description = movie_d.get("description")
-        movie.trailer = movie_d.get("trailer")
-        movie.year = movie_d.get("year")
-        movie.rating = movie_d.get("rating")
-        movie.genre_id = movie_d.get("genre_id")
-        movie.director_id = movie_d.get("director_id")
-
-        self._db_session.add(movie)
+        self._db_session.add(Movie(**movie_d))
         self._db_session.commit()
-        return movie
 
     def delete(self, pk):
         movie = self.get_by_id(pk)
@@ -37,13 +42,33 @@ class MovieDAO:
     def update(self, movie_d):
         movie = self.get_by_id(movie_d.get("id"))
 
-        movie.title = movie_d.get("title")
-        movie.description = movie_d.get("description")
-        movie.trailer = movie_d.get("trailer")
-        movie.year = movie_d.get("year")
-        movie.rating = movie_d.get("rating")
-        movie.genre_id = movie_d.get("genre_id")
-        movie.director_id = movie_d.get("director_id")
+        title = movie_d.get("title")
+        if title is not None:
+            movie.title = movie_d.get("title")
+
+        description = movie_d.get("description")
+        if description is not None:
+            movie.description = movie_d.get("description")
+
+        trailer = movie_d.get("trailer")
+        if trailer is not None:
+            movie.trailer = movie_d.get("trailer")
+
+        year = movie_d.get("year")
+        if year is not None:
+            movie.year = movie_d.get("year")
+
+        rating = movie_d.get("rating")
+        if rating is not None:
+            movie.rating = movie_d.get("rating")
+
+        genre_id = movie_d.get("genre_id")
+        if genre_id is not None:
+            movie.genre_id = movie_d.get("genre_id")
+
+        director_id = movie_d.get("director_id")
+        if director_id is not None:
+            movie.director_id = movie_d.get("director_id")
 
         self._db_session.add(movie)
         self._db_session.commit()

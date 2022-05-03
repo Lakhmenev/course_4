@@ -14,17 +14,11 @@ class DirectorDAO:
         return self._db_session.query(Director).all()
 
     def create(self, director_d):
-        # ent = Director(**director_d)
-        ent = {}
-        ent.name = director_d.get("name")
-
-        self._db_session.add(ent)
+        self._db_session.add(Director(**director_d))
         self._db_session.commit()
-        return ent
 
     def delete(self, pk):
         director = self.get_by_id(pk)
-
         self._db_session.delete(director)
         self._db_session.commit()
 

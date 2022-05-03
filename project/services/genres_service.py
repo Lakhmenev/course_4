@@ -14,3 +14,12 @@ class GenresService(BaseService):
     def get_all_genres(self):
         genres = GenreDAO(self._db_session).get_all()
         return GenreSchema(many=True).dump(genres)
+
+    def create(self, genre_d):
+        return GenreDAO(self._db_session).create(genre_d)
+
+    def update(self, genre_d):
+        return GenreDAO(self._db_session).update(genre_d)
+
+    def delete(self, pk):
+        return GenreDAO(self._db_session).delete(pk)

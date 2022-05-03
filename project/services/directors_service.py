@@ -14,3 +14,12 @@ class DirectorsService(BaseService):
     def get_all_directors(self):
         directors = DirectorDAO(self._db_session).get_all()
         return DirectorSchema(many=True).dump(directors)
+
+    def create(self, director_d):
+        return DirectorDAO(self._db_session).create(director_d)
+
+    def update(self, director_d):
+        return DirectorDAO(self._db_session).update(director_d)
+    
+    def delete(self, pk):
+        return DirectorDAO(self._db_session).delete(pk)
