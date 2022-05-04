@@ -12,8 +12,8 @@ genres_ns = Namespace("genres")
 class GenresView(Resource):
     @genres_ns.response(200, "OK")
     def get(self):
-        """Get all genres"""
-        return GenresService(db.session).get_all_genres()
+        data_filter = request.args
+        return GenresService(db.session).get_all_genres(data_filter)
 
     @genres_ns.response(201, "OK")
     def post(self):

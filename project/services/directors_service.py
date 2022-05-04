@@ -11,9 +11,9 @@ class DirectorsService(BaseService):
             raise ItemNotFound
         return DirectorSchema().dump(director)
 
-    def get_all_directors(self):
-        directors = DirectorDAO(self._db_session).get_all()
-        return DirectorSchema(many=True).dump(directors)
+    def get_all_directors(self, data_filter):
+        directors = DirectorDAO(self._db_session)
+        return DirectorSchema(many=True).dump(directors.get_all(data_filter))
 
     def create(self, director_d):
         return DirectorDAO(self._db_session).create(director_d)

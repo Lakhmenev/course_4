@@ -1,5 +1,6 @@
 from sqlalchemy.orm.scoping import scoped_session
 from project.dao.models import User
+import project.config
 
 
 class UserDAO:
@@ -9,8 +10,19 @@ class UserDAO:
     def get_by_id(self, pk):
         return self._db_session.query(User).filter(User.id == pk).one_or_none()
 
-    def get_all(self):
-        return self._db_session.query(User).all()
+    def get_all(self, data_filter):
+        users = self._db_session.query(User)
+
+        # Обрабатываем пагинацию
+        page = data_filter.get('page')
+
+        if page is not None:
+            page_int = int(data_filter.get('page'))
+            users = users.paginate(page_int, project.config.BaseConfig.ITEMS_PER_PAGE, False)
+
+            return users.items
+        else:
+            return users.all()
 
     def create(self, user_d):
         self._db_session.add(User(**user_d))

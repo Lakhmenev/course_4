@@ -11,8 +11,8 @@ users_ns = Namespace("users")
 class UsersView(Resource):
     @users_ns.response(200, "OK")
     def get(self):
-        """Get all users"""
-        return UsersService(db.session).get_all_users()
+        data_filter = request.args
+        return UsersService(db.session).get_all_users(data_filter)
 
     @users_ns.response(201, "OK")
     def post(self):

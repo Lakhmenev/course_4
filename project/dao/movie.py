@@ -1,5 +1,5 @@
 from sqlalchemy.orm.scoping import scoped_session
-
+import project.config
 from project.dao.models import Movie
 
 
@@ -28,7 +28,21 @@ class MovieDAO:
         if genre_id is not None:
             movies = movies.filter(Movie.genre_id == genre_id)
 
-        return movies.all()
+        # Обрабатываем если status=new
+        status = data_filter.get('status')
+        if status == 'new':
+            movies = movies.order_by(Movie.id.desc())
+
+        # Обрабатываем пагинацию
+        page = data_filter.get('page')
+
+        if page is not None:
+            page_int = int(data_filter.get('page'))
+            movies = movies.paginate(page_int, project.config.BaseConfig.ITEMS_PER_PAGE, False)
+
+            return movies.items
+        else:
+            return movies.all()
 
     def create(self, movie_d):
         self._db_session.add(Movie(**movie_d))

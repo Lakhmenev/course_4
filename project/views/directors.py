@@ -11,8 +11,8 @@ directors_ns = Namespace("directors")
 class DirectorsView(Resource):
     @directors_ns.response(200, "OK")
     def get(self):
-        """Get all directors"""
-        return DirectorsService(db.session).get_all_directors()
+        data_filter = request.args
+        return DirectorsService(db.session).get_all_directors(data_filter)
 
     @directors_ns.response(201, "OK")
     def post(self):
