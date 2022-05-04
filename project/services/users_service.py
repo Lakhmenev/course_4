@@ -2,6 +2,7 @@ from project.dao import UserDAO
 from project.exceptions import ItemNotFound
 from project.schemas.user import UserSchema
 from project.services.base import BaseService
+from project.tools.security import generate_password_digest
 
 
 class UsersService(BaseService):
@@ -16,6 +17,7 @@ class UsersService(BaseService):
         return UserSchema(many=True).dump(users.get_all(data_filter))
 
     def create(self, user_d):
+        user_d['password'] = generate_password_digest(user_d['password'])
         return UserDAO(self._db_session).create(user_d)
 
     def update(self, user_d):
