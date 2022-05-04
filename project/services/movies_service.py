@@ -15,11 +15,11 @@ class MoviesService(BaseService):
         movies = MovieDAO(self._db_session)
         return MovieSchema(many=True).dump(movies.get_all(data_filter))
 
-    def create(self, genre_d):
-        return MovieDAO(self._db_session).create(genre_d)
+    def create(self, movie_d):
+        return MovieDAO(self._db_session).create(movie_d)
 
-    def update(self, genre_d):
-        return MovieDAO(self._db_session).update(genre_d)
+    def update(self, movie_d):
+        return MovieDAO(self._db_session).update(movie_d)
 
     def delete(self, pk):
         return MovieDAO(self._db_session).delete(pk)

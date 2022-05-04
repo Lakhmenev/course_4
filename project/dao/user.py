@@ -13,18 +13,8 @@ class UserDAO:
         return self._db_session.query(User).all()
 
     def create(self, user_d):
-        # user = (**user_d)
-        user = {}
-        user.email = user_d.get("email")
-        user.password = user_d.get("password")
-        user.name = user_d.get("name")
-        user.surname = user_d.get("surname")
-        user.favorite_genre_id = user_d.get("favorite_genre_id")
-        user.role = user_d.get("role")
-
-        self._db_session.add(user)
+        self._db_session.add(User(**user_d))
         self._db_session.commit()
-        return user
 
     def delete(self, pk):
         user = self.get_by_id(pk)
@@ -34,12 +24,29 @@ class UserDAO:
     def update(self, user_d):
         user = self.get_by_id(user_d.get("id"))
 
-        user.email = user_d.get("email")
-        user.password = user_d.get("password")
-        user.name = user_d.get("name")
-        user.surname = user_d.get("surname")
-        user.favorite_genre_id = user_d.get("favorite_genre_id")
-        user.role = user_d.get("role")
+        email = user_d.get("email")
+        if email is not None:
+            user.email = user_d.get("email")
+
+        password = user_d.get("password")
+        if password is not None:
+            user.password = user_d.get("password")
+
+        name = user_d.get("name")
+        if name is not None:
+            user.name = user_d.get("name")
+
+        surname = user_d.get("surname")
+        if surname is not None:
+            user.surname = user_d.get("surname")
+
+        favorite_genre_id = user_d.get("favorite_genre_id")
+        if favorite_genre_id is not None:
+            user.favorite_genre_id = user_d.get("favorite_genre_id")
+
+        role = user_d.get("role")
+        if role is not None:
+            user.role = user_d.get("role")
 
         self._db_session.add(user)
         self._db_session.commit()
