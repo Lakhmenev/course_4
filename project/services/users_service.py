@@ -26,3 +26,9 @@ class UsersService(BaseService):
 
     def delete(self, pk):
         return UserDAO(self._db_session).delete(pk)
+
+    def get_item_by_email(self, email):
+        user = UserDAO(self._db_session).get_by_email(email)
+        if not user:
+            raise ItemNotFound
+        return UserSchema().dump(user)

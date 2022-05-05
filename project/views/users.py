@@ -3,7 +3,7 @@ from flask import request
 from project.exceptions import ItemNotFound
 from project.services import UsersService
 from project.setup_db import db
-from project.tools.utils import admin_access_required
+from project.tools.utils import admin_access_required, auth_required_user_data, auth_required
 
 users_ns = Namespace("users")
 user_ns = Namespace("user")
@@ -16,6 +16,7 @@ class UsersView(Resource):
         data_filter = request.args
         return UsersService(db.session).get_all_users(data_filter)
 
+    @auth_required
     @users_ns.response(201, "OK")
     def post(self):
         req_json = request.json
@@ -53,8 +54,10 @@ class UserView(Resource):
 
 @user_ns.route("/")
 class UserView(Resource):
+    @auth_required_user_data
     def get(self):
-        pass
+        # Всю информацию по данным пользователя возвращает декоратор
+        return
 
     @user_ns.response(201, "OK")
     def post(self):

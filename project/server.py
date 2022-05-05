@@ -1,15 +1,15 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_restx import Api
 
 from project.setup_db import db
-from project.views import genres_ns
-from project.views import directors_ns
-from project.views import movies_ns
-from project.views import users_ns
-from project.views import user_ns
 from project.views import auth_ns
+from project.views import directors_ns
+from project.views import genres_ns
+from project.views import movies_ns
 from project.views import protected_ns
+from project.views import user_ns
+from project.views import users_ns
 
 api = Api(
     authorizations={
@@ -26,6 +26,10 @@ cors = CORS()
 def create_app(config_obj):
     app = Flask(__name__)
     app.config.from_object(config_obj)
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
     cors.init_app(app)
     db.init_app(app)

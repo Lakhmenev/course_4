@@ -10,6 +10,9 @@ class UserDAO:
     def get_by_id(self, pk):
         return self._db_session.query(User).filter(User.id == pk).one_or_none()
 
+    def get_by_email(self, email):
+        return self._db_session.query(User).filter(User.email == email).one_or_none()
+
     def get_all(self, data_filter):
         users = self._db_session.query(User)
 

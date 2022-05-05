@@ -3,6 +3,7 @@ from flask import request, current_app
 from project.constants import SECRET_KEY, PWD_HASH_ALGORITHM
 from flask_restx import abort
 from project.dao.auth import AuthDAO
+from project.dao.user import UserDAO
 from project.setup_db import db
 
 
@@ -67,3 +68,31 @@ def admin_access_required(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+
+def auth_required_user_data(func):
+    def wrapper(*args, **kwargs):
+        # Получаем заголовок с токеном из запроса.
+        token = get_token_from_headers(request.headers)
+
+        # Пытаемся раскодировать токен
+        decoded_token = decode_token(token)
+
+        # Проверяем, что email существует.
+        if not AuthDAO(db.session).get_by_email(decoded_token['email']):
+            abort(401)
+
+        result = UserDAO(db.session).get_by_email(decoded_token['email'])
+        data = {
+            'email': result.email,
+            # 'password': result.password,
+            'name': result.name,
+            'surname': result.surname,
+            'role': result.role,
+            'id': result.id,
+            'favorite_genre_id': result.favorite_genre_id
+        }
+        return data
+
+    return wrapper
+
