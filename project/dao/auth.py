@@ -9,9 +9,14 @@ class AuthDAO:
         ...
 
     def get_by_email(self, email):
-        emails = self.session.query(User)
+        users = self.session.query(User)
 
         if email is not None:
-            emails = emails.filter(User.email == email).all()
-            return emails
+            users = users.filter(User.email == email).one()
+            data = {
+                'email': users.email,
+                'role': users.role,
+                'password': users.password,
+            }
+            return data
         return None

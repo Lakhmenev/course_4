@@ -1,5 +1,5 @@
 from flask_restx import Resource, Namespace
-from project.tools.util import auth_required, admin_access_required
+from project.tools.utils import auth_required, admin_access_required
 
 protected_ns = Namespace('protected')
 

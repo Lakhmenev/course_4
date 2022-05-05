@@ -16,8 +16,8 @@ class MoviesView(Resource):
 
     @movies_ns.response(201, "OK")
     def post(self):
-        req_json = request.json
-        MoviesService(db.session).create(req_json)
+        reg_json = request.json
+        MoviesService(db.session).create(reg_json)
         return [], 201
 
 

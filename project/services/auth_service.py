@@ -1,26 +1,29 @@
-from project.dao.auth import AuthDAO
-from project.tools.security import generate_password_digest, get_hash, generate_tokens
-from project.tools.util import decode_token
+from flask_restx import abort
+from project.dao import AuthDAO
+from project.services.base import BaseService
+from project.tools.security import get_hash, generate_tokens
+from project.tools.utils import decode_token
 
 
-class AuthService:
+class AuthService(BaseService):
+    def login(self, data: dict):
+        user_data = AuthDAO(self._db_session).get_by_email(data['email'])
 
-    def __init__(self, dao: AuthDAO):
-        self.dao = dao
+        if user_data is None:
+            abort(401, message='Email not found')
 
-    def login(self, email, password, role):
-        hash_password = generate_password_digest(password)
+        hash_password = get_hash(data['password'])
 
-        # hash_password_old = get_hash(password)
+        if user_data['password'] != hash_password:
+            return abort(401, message='Invalid password')
 
-        if password == hash_password:
-            tokens: dict = generate_tokens(
-                {
-                    'email': email,
-                    'role': role,
-                },
-            )
-            return tokens
+        tokens: dict = generate_tokens(
+            {
+                'email': data['email'],
+                'role': user_data['role']
+            },
+        )
+        return tokens
 
     def get_new_tokens(self, refresh_token: str):
 
@@ -28,7 +31,7 @@ class AuthService:
 
         tokens = generate_tokens(
             data={
-                'username': decoded_token['username'],
+                'email': decoded_token['email'],
                 'role': decoded_token['role'],
             },
         )

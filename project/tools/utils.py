@@ -1,7 +1,9 @@
 import jwt
 from flask import request, current_app
+from project.constants import SECRET_KEY, PWD_HASH_ALGORITHM
 from flask_restx import abort
 from project.dao.auth import AuthDAO
+from project.setup_db import db
 
 
 def get_token_from_headers(headers: dict):
@@ -16,8 +18,8 @@ def decode_token(token: str, refresh_token: bool = False):
     try:
         decoded_token = jwt.decode(
             jwt=token,
-            key=current_app.config.SECRET_KEY,
-            algorithms=current_app.config.PWD_HASH_ALGORITHM,
+            key=SECRET_KEY,
+            algorithms=[PWD_HASH_ALGORITHM],
         )
     except jwt.PyJWTError:
         current_app.logger.info('Got wrong token "%s"', token)
@@ -39,7 +41,7 @@ def auth_required(func):
         decoded_token = decode_token(token)
 
         # Проверяем, что email существует.
-        if not AuthDAO.get_by_email(decoded_token['email']):
+        if not AuthDAO(db.session).get_by_email(decoded_token['email']):
             abort(401)
 
         return func(*args, **kwargs)
@@ -58,8 +60,8 @@ def admin_access_required(func):
         if decoded_token['role'] != 'admin':
             abort(403)
 
-        # Проверяем, что пользователь существует.
-        if not AuthDAO.get_by_email(decoded_token['email']):
+        # Проверяем, что пользователь с таким email существует.
+        if not AuthDAO(db.session).get_by_email(decoded_token['email']):
             abort(401)
 
         return func(*args, **kwargs)

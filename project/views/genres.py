@@ -3,7 +3,7 @@ from flask import request
 from project.exceptions import ItemNotFound
 from project.services import GenresService
 from project.setup_db import db
-
+from project.tools.utils import admin_access_required
 
 genres_ns = Namespace("genres")
 

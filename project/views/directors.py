@@ -4,6 +4,7 @@ from project.exceptions import ItemNotFound
 from project.services import DirectorsService
 from project.setup_db import db
 
+
 directors_ns = Namespace("directors")
 
 
