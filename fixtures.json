@@ -201,26 +201,6 @@
 			"pk": 20
 		}
 	],
-	"users": [
-		{
-			"pk": 1,
-			"email": "some1@gmail.com",
-			"password": "123456",
-			"name": "OneName",
-			"surname": "OneSurname",
-			"favorite_genre_id": "1",
-			"role": "user"
-		},
-		{
-			"pk": 2,
-			"email": "some2@gmail.com",
-			"password": "654321",
-			"name": "TwoName",
-			"surname": "TwoSurname",
-			"favorite_genre_id": "2",
-			"role": "admin"
-		}
-	],
 	"directors": [
 		{
 			"name": "Тейлор Шеридан",

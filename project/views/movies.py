@@ -21,7 +21,7 @@ class MoviesView(Resource):
         return [], 201
 
 
-@movies_ns.route("/<int:movie_id>")
+@movies_ns.route("/<int:movie_id>/")
 class MovieView(Resource):
     @movies_ns.response(200, "OK")
     @movies_ns.response(404, "Genre not found")

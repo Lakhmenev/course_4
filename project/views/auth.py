@@ -7,7 +7,7 @@ from project.services import UsersService
 auth_ns = Namespace('auth')
 
 
-@auth_ns.route('/login')
+@auth_ns.route('/login/')
 class AuthView(Resource):
     def post(self):
         reg_json = request.json
@@ -28,7 +28,7 @@ class AuthView(Resource):
         return AuthService(db.session).get_new_tokens(reg)
 
 
-@auth_ns.route('/register')
+@auth_ns.route('/register/')
 class AuthReg(Resource):
     def post(self):
         reg_json = request.json

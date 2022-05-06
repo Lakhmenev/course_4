@@ -3,7 +3,8 @@ from flask import request
 from project.exceptions import ItemNotFound
 from project.services import UsersService
 from project.setup_db import db
-from project.tools.utils import admin_access_required, auth_required_user_data, auth_required
+from project.tools.utils import auth_required_user_data, auth_required, \
+    auth_required_user_data_patch, auth_required_user_change_password
 
 users_ns = Namespace("users")
 user_ns = Namespace("user")
@@ -24,7 +25,7 @@ class UsersView(Resource):
         return [], 201
 
 
-@users_ns.route("/<int:user_id>")
+@users_ns.route("/<int:user_id>/")
 class UserView(Resource):
     @users_ns.response(200, "OK")
     @users_ns.response(404, "User not found")
@@ -59,18 +60,15 @@ class UserView(Resource):
         # Всю информацию по данным пользователя возвращает декоратор
         return
 
-    @user_ns.response(201, "OK")
-    def post(self):
-        # req_json = request.json
-        # UsersService(db.session).create(req_json)
-        return [], 201
-
+    @auth_required_user_data_patch
     def patch(self):
-        pass
+        req_json = request.json
+        return req_json
 
 
-@user_ns.route("/password")
+@user_ns.route("/password/")
 class UserPasswordEdit(Resource):
-    @admin_access_required
+    @auth_required_user_change_password
     def put(self):
-        return ['kkkk'], 201
+        req_json = request.json
+        return req_json

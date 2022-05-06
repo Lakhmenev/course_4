@@ -55,9 +55,9 @@ class UserDAO:
         if surname is not None:
             user.surname = user_d.get("surname")
 
-        favorite_genre_id = user_d.get("favorite_genre_id")
-        if favorite_genre_id is not None:
-            user.favorite_genre_id = user_d.get("favorite_genre_id")
+        favorite_genre = user_d.get("favorite_genre")
+        if favorite_genre is not None:
+            user.favorite_genre = user_d.get("favorite_genre")
 
         role = user_d.get("role")
         if role is not None:

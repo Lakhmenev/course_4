@@ -24,11 +24,6 @@ with app.app_context():
         db.session.add(Movie(id=movie["pk"], title=movie["title"], description=movie["description"],
                              trailer=movie["trailer"], year=movie["year"], rating=movie["rating"],
                              genre_id=movie["genre_id"], director_id=movie["director_id"]))
-
-    for user in data["users"]:
-        db.session.add(User(id=user["pk"], email=user["email"], password=user["password"], name=user["name"],
-                            surname=user["surname"], favorite_genre_id=user["favorite_genre_id"], role=user["role"]))
-
     try:
         db.session.commit()
     except IntegrityError:

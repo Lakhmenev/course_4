@@ -22,7 +22,7 @@ class GenresView(Resource):
         return [], 201
 
 
-@genres_ns.route("/<int:genre_id>")
+@genres_ns.route("/<int:genre_id>/")
 class GenreView(Resource):
     @genres_ns.response(200, "OK")
     @genres_ns.response(404, "Genre not found")

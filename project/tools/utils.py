@@ -5,6 +5,7 @@ from flask_restx import abort
 from project.dao.auth import AuthDAO
 from project.dao.user import UserDAO
 from project.setup_db import db
+from project.tools.security import get_hash
 
 
 def get_token_from_headers(headers: dict):
@@ -82,17 +83,81 @@ def auth_required_user_data(func):
         if not AuthDAO(db.session).get_by_email(decoded_token['email']):
             abort(401)
 
+        # Получаем по полю email информацию профиля
         result = UserDAO(db.session).get_by_email(decoded_token['email'])
+
         data = {
             'email': result.email,
-            # 'password': result.password,
             'name': result.name,
             'surname': result.surname,
-            'role': result.role,
-            'id': result.id,
-            'favorite_genre_id': result.favorite_genre_id
+            'favourite_genre': result.favorite_genre
         }
         return data
 
     return wrapper
 
+
+def auth_required_user_data_patch(func):
+    def wrapper(*args, **kwargs):
+        # Получаем заголовок с токеном из запроса.
+        token = get_token_from_headers(request.headers)
+
+        # Пытаемся раскодировать токен
+        decoded_token = decode_token(token)
+
+        # Проверяем, что email существует.
+        if not AuthDAO(db.session).get_by_email(decoded_token['email']):
+            abort(401)
+
+        result = UserDAO(db.session).get_by_email(decoded_token['email'])
+
+        new_data = func(*args, **kwargs)
+
+        data = {
+            'id': result.id,
+            'name': new_data["name"],
+            'surname': new_data["surname"],
+            'favorite_genre': new_data["favourite_genre"]
+        }
+
+        UserDAO(db.session).update(data)
+
+        return [], 204
+
+    return wrapper
+
+
+def auth_required_user_change_password(func):
+    def wrapper(*args, **kwargs):
+        # Получаем заголовок с токеном из запроса.
+        token = get_token_from_headers(request.headers)
+
+        # Пытаемся раскодировать токен
+        decoded_token = decode_token(token)
+
+        # Проверяем, что email существует.
+        if not AuthDAO(db.session).get_by_email(decoded_token['email']):
+            abort(401)
+
+        result = UserDAO(db.session).get_by_email(decoded_token['email'])
+
+        current_password = result.password
+
+        new_data_password = func(*args, **kwargs)
+
+        temp_password = get_hash(new_data_password['old_password'])
+
+        if current_password != temp_password:
+            return abort(401)
+
+        temp_password = get_hash(new_data_password['new_password'])
+
+        data = {
+            'id': result.id,
+            'password': temp_password,
+        }
+
+        UserDAO(db.session).update(data)
+        return [], 204
+
+    return wrapper
