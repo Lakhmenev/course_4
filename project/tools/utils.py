@@ -4,6 +4,7 @@ from project.constants import SECRET_KEY, PWD_HASH_ALGORITHM
 from flask_restx import abort
 from project.dao.auth import AuthDAO
 from project.dao.user import UserDAO
+from project.dao.favorite import FavoriteDAO
 from project.setup_db import db
 from project.tools.security import get_hash
 
@@ -161,3 +162,18 @@ def auth_required_user_change_password(func):
         return [], 204
 
     return wrapper
+
+
+def get_user_id():
+    # Получаем заголовок с токеном из запроса.
+    token = get_token_from_headers(request.headers)
+
+    # Пытаемся раскодировать токен
+    decoded_token = decode_token(token)
+
+    # Проверяем, что email существует.
+    if not AuthDAO(db.session).get_by_email(decoded_token['email']):
+        abort(401)
+
+    result = UserDAO(db.session).get_by_email(decoded_token['email'])
+    return result.id

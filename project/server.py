@@ -10,6 +10,8 @@ from project.views import movies_ns
 from project.views import protected_ns
 from project.views import user_ns
 from project.views import users_ns
+from project.views import favorites_ns
+
 
 api = Api(
     authorizations={
@@ -43,5 +45,6 @@ def create_app(config_obj):
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
     api.add_namespace(protected_ns)
+    api.add_namespace(favorites_ns)
 
     return app
