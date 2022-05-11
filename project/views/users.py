@@ -4,7 +4,7 @@ from project.exceptions import ItemNotFound
 from project.services import UsersService
 from project.setup_db import db
 from project.tools.utils import auth_required_user_data, auth_required, \
-    auth_required_user_data_patch, auth_required_user_change_password
+    auth_required_user_data_patch, auth_required_user_change_password, admin_access_required
 
 users_ns = Namespace("users")
 user_ns = Namespace("user")
@@ -13,12 +13,13 @@ user_ns = Namespace("user")
 @users_ns.route("/")
 class UsersView(Resource):
     @users_ns.response(200, "OK")
+    @admin_access_required
     def get(self):
         data_filter = request.args
         return UsersService(db.session).get_all_users(data_filter)
 
-    @auth_required
     @users_ns.response(201, "OK")
+    @admin_access_required
     def post(self):
         req_json = request.json
         UsersService(db.session).create(req_json)
@@ -29,6 +30,7 @@ class UsersView(Resource):
 class UserView(Resource):
     @users_ns.response(200, "OK")
     @users_ns.response(404, "User not found")
+    @admin_access_required
     def get(self, user_id: int):
         """Get user by id"""
         try:
@@ -36,16 +38,19 @@ class UserView(Resource):
         except ItemNotFound:
             abort(404, message="User not found")
 
+    @admin_access_required
     def delete(self, user_id):
         UsersService(db.session).delete(user_id)
         return [], 204
 
+    @admin_access_required
     def put(self, user_id):
         req_json = request.json
         req_json['id'] = user_id
         UsersService(db.session).update(req_json)
         return [], 204
 
+    @admin_access_required
     def patch(self, user_id):
         req_json = request.json
         req_json['id'] = user_id

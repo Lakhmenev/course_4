@@ -3,13 +3,14 @@ from flask import request
 from project.exceptions import ItemNotFound
 from project.services import FavoritesService
 from project.setup_db import db
-from project.tools.utils import get_user_id
+from project.tools.utils import get_user_id, auth_required
 
 favorites_ns = Namespace("favorites")
 
 
 @favorites_ns.route("/movies/<int:movie_id>/")
 class FavoritesView(Resource):
+    @auth_required
     def post(self, movie_id):
         user_id = get_user_id()
         data = {'user_id': user_id,
@@ -20,6 +21,7 @@ class FavoritesView(Resource):
             return [], 201
         return abort(401)
 
+    @auth_required
     def delete(self, movie_id):
         user_id = get_user_id()
         data = {'user_id': user_id,

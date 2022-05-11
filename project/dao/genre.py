@@ -12,7 +12,7 @@ class GenreDAO:
 
     def get_all(self, data_filter):
         genres = self._db_session.query(Genre)
-        print(type(Genre))
+
         # Обрабатываем пагинацию
         page = data_filter.get('page')
 
