@@ -30,26 +30,29 @@ class GenreView(Resource):
     @genres_ns.response(404, "Genre not found")
     # @auth_required
     def get(self, genre_id: int):
-        """        This examples uses FlaskRESTful Resource
-        It works also with swag_from, schemas and spec_dict
+        """
+        Получить наименования жанра по его id
         ---
+        tags:
+        - name: "genre"
+            description: "Name genre"
         parameters:
           - in: path
-            name: username
-            type: string
-            required: true
+                name: name
+                type: string
+                required: true
 
         responses:
           200:
-            description: A single user item
+            description: A single genre item
 
             schema:
-              id: User
+              id: Genre
               properties:
-                username:
+                name:
                   type: string
-                  description: The name of the user
-                  default: Steven Wilson"""
+                  description: The name of the genre
+                  default: -"""
         try:
             return GenresService(db.session).get_item_by_id(genre_id)
         except ItemNotFound:

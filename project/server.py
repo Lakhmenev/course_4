@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_cors import CORS
-from flask_restx import Api, Resource
+from flask_restx import Api
 
 
 from project.setup_db import db
@@ -18,40 +18,12 @@ api = Api(
     authorizations={
         "Bearer": {"type": "apiKey", "in": "header", "name": "Authorization"}
     },
-    title="Flask Course Project 3",
-    doc="/docs",
+    title="Flask Course Project 4",
+    doc="/docs/",
 )
 
 # Нужно для работы с фронтендом
 cors = CORS()
-
-
-class Username(Resource):
-    def get(self, username):
-        """
-        This examples uses FlaskRESTful Resource
-        It works also with swag_from, schemas and spec_dict
-        ---
-        parameters:
-          - in: path
-            name: username
-            type: string
-            required: true
-
-        responses:
-          200:
-            description: A single user item
-
-            schema:
-              id: User
-              properties:
-
-                username:
-                  type: string
-                  description: The name of the user
-                  default: Steven Wilson
-        """
-        return {'username': username}, 200
 
 
 def create_app(config_obj):
@@ -70,12 +42,10 @@ def create_app(config_obj):
     api.add_namespace(genres_ns)
     api.add_namespace(directors_ns)
     api.add_namespace(movies_ns)
-    api.add_namespace(users_ns)
+    # api.add_namespace(users_ns)
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
     api.add_namespace(protected_ns)
     api.add_namespace(favorites_ns)
-
-    api.add_resource(Username, '/username/<username>')
 
     return app
