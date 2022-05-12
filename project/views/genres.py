@@ -11,7 +11,7 @@ genres_ns = Namespace("genres")
 @genres_ns.route("/")
 class GenresView(Resource):
     @genres_ns.response(200, "OK")
-    @auth_required
+    # @auth_required
     def get(self):
         data_filter = request.args
         return GenresService(db.session).get_all_genres(data_filter)
@@ -28,9 +28,28 @@ class GenresView(Resource):
 class GenreView(Resource):
     @genres_ns.response(200, "OK")
     @genres_ns.response(404, "Genre not found")
-    @auth_required
+    # @auth_required
     def get(self, genre_id: int):
-        """Get genre by id"""
+        """        This examples uses FlaskRESTful Resource
+        It works also with swag_from, schemas and spec_dict
+        ---
+        parameters:
+          - in: path
+            name: username
+            type: string
+            required: true
+
+        responses:
+          200:
+            description: A single user item
+
+            schema:
+              id: User
+              properties:
+                username:
+                  type: string
+                  description: The name of the user
+                  default: Steven Wilson"""
         try:
             return GenresService(db.session).get_item_by_id(genre_id)
         except ItemNotFound:

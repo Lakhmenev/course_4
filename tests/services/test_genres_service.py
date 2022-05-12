@@ -27,7 +27,8 @@ class TestGenresService:
             yield mock
 
     def test_get_all_genres(self, genre_dao_mock, genre):
-        assert self.service.get_all_genres() == GenreSchema(many=True).dump([genre])
+        data_filter = {'page': None}
+        assert self.service.get_all_genres(data_filter) == GenreSchema(many=True).dump([genre])
         genre_dao_mock().get_all.assert_called_once()
 
     def test_get_item_by_id(self, genre_dao_mock, genre):

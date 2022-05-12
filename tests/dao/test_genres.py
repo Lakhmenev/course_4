@@ -30,4 +30,5 @@ class TestGenreDAO:
         assert self.dao.get_by_id(1) is None
 
     def test_get_all_genres(self, genre_1, genre_2):
-        assert self.dao.get_all() == [genre_1, genre_2]
+        data_filter = {'page': None}
+        assert self.dao.get_all(data_filter) == [genre_1, genre_2]

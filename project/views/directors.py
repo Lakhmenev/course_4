@@ -11,7 +11,7 @@ directors_ns = Namespace("directors")
 @directors_ns.route("/")
 class DirectorsView(Resource):
     @directors_ns.response(200, "OK")
-    @auth_required
+    # @auth_required
     def get(self):
         data_filter = request.args
         return DirectorsService(db.session).get_all_directors(data_filter)
@@ -28,7 +28,7 @@ class DirectorsView(Resource):
 class DirectorView(Resource):
     @directors_ns.response(200, "OK")
     @directors_ns.response(404, "Director not found")
-    @auth_required
+    # @auth_required
     def get(self, director_id: int):
         """Get director by id"""
         try:

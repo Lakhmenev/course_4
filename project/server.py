@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_cors import CORS
-from flask_restx import Api
+from flask_restx import Api, Resource
+
 
 from project.setup_db import db
 from project.views import auth_ns
@@ -25,6 +26,34 @@ api = Api(
 cors = CORS()
 
 
+class Username(Resource):
+    def get(self, username):
+        """
+        This examples uses FlaskRESTful Resource
+        It works also with swag_from, schemas and spec_dict
+        ---
+        parameters:
+          - in: path
+            name: username
+            type: string
+            required: true
+
+        responses:
+          200:
+            description: A single user item
+
+            schema:
+              id: User
+              properties:
+
+                username:
+                  type: string
+                  description: The name of the user
+                  default: Steven Wilson
+        """
+        return {'username': username}, 200
+
+
 def create_app(config_obj):
     app = Flask(__name__)
     app.config.from_object(config_obj)
@@ -46,5 +75,7 @@ def create_app(config_obj):
     api.add_namespace(auth_ns)
     api.add_namespace(protected_ns)
     api.add_namespace(favorites_ns)
+
+    api.add_resource(Username, '/username/<username>')
 
     return app

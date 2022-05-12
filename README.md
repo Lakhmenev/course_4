@@ -1,7 +1,8 @@
-https://ploshadka.net/sqlalchemy-many-to-many/
-https://question-it.com/questions/580737/kak-ja-mogu-vstavit-stroku-v-tablitsu-sqlalchemy-obekt
-https://pythonru.com/uroki/15-osnovy-orm-sqlalchemy
-https://habr.com/ru/post/230897/
+pip install flasgger
+
+pip install marshmallow apispec
+
+pip install flask-restful
 
 
 

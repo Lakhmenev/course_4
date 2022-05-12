@@ -11,7 +11,7 @@ movies_ns = Namespace("movies")
 @movies_ns.route("/")
 class MoviesView(Resource):
     @movies_ns.response(200, "OK")
-    @auth_required
+    # @auth_required
     def get(self):
         data_filter = request.args
         return MoviesService(db.session).get_all_movies(data_filter)
@@ -28,7 +28,7 @@ class MoviesView(Resource):
 class MovieView(Resource):
     @movies_ns.response(200, "OK")
     @movies_ns.response(404, "Genre not found")
-    @auth_required
+    # @auth_required
     def get(self, movie_id: int):
         """Get movie by id"""
         try:

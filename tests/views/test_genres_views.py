@@ -15,6 +15,7 @@ class TestGenresView:
 
     def test_get_genres(self, client, genre):
         response = client.get(self.url)
+        print(response)
         assert response.status_code == 200
         assert response.json == [
             {"id": genre.id, "name": genre.name},
@@ -22,7 +23,7 @@ class TestGenresView:
 
 
 class TestGenreView:
-    url = "/genres/{genre_id}"
+    url = "/genres/{genre_id}/"
 
     @pytest.fixture
     def genre(self, db):

@@ -4,10 +4,12 @@ from project.dao.models import Director
 from project.dao.models import Movie
 from project.dao.models import User
 from project.server import create_app, db
+from flasgger import Swagger
 
 
 app = create_app(DevelopmentConfig)
 
+Swagger(app)
 
 @app.shell_context_processor
 def shell():
