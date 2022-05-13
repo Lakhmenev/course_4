@@ -34,12 +34,12 @@ class GenreView(Resource):
         Получить наименования жанра по его id
         ---
         tags:
-        - name: "genre"
-            description: "Name genre"
+        - id: "_"
+            description: "ID genre"
         parameters:
           - in: path
-                name: name
-                type: string
+                id: id
+                type: int
                 required: true
 
         responses:
@@ -52,14 +52,32 @@ class GenreView(Resource):
                 name:
                   type: string
                   description: The name of the genre
-                  default: -"""
+                  default: -
+        """
         try:
             return GenresService(db.session).get_item_by_id(genre_id)
         except ItemNotFound:
             abort(404, message="Genre not found")
 
-    @admin_access_required
+    @genres_ns.response(204, "Delete")
+    @auth_required
     def delete(self, genre_id):
+        """
+        Удалить жанр по его id
+        ---
+        tags:
+        - name: "genre"
+            description: "Name genre"
+        parameters:
+          - in: path
+                name: name
+                type: string
+                required: true
+
+        responses:
+          204:
+            description:
+        """
         GenresService(db.session).delete(genre_id)
         return [], 204
 
