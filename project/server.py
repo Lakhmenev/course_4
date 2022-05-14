@@ -1,8 +1,6 @@
 from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
 from flask_restx import Api
-import pathlib
-from pathlib import Path
 
 from project.setup_db import db
 from project.views import auth_ns
@@ -37,10 +35,8 @@ def create_app(config_obj):
     def send_static(path):
         return send_from_directory('static', path)
 
-
     SWAGGER_URL = '/swagger'  # URL for exposing Swagger UI (without trailing '/')
-    # 'http://petstore.swagger.io/v2/swagger.json'
-    API_URL = '/static/swagger.json'    #  f"{Path(pathlib.Path.cwd(), 'project', 'static', 'swagger.json')}"
+    API_URL = '/static/swagger.json'
 
     # Call factory function to create our blueprint
     swaggerui_blueprint = get_swaggerui_blueprint(
