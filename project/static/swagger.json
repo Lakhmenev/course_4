@@ -116,8 +116,8 @@
         "security": [
           {
             "petstore_auth": [
-              "write:pets",
-              "read:pets"
+              "write:items",
+              "read:items"
             ]
           }
         ]
@@ -130,8 +130,8 @@
           "auth"
         ],
         "summary": "Авторизация пользователя",
-        "description": "Multiple status values can be provided with comma separated strings",
-        "operationId": "findPetsByStatus",
+        "description": "Comments..",
+        "operationId": "AuthView.post()",
         "produces": [
           "application/json"
         ],
@@ -155,7 +155,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "successful operation",
             "schema": {
               "type": "array",
@@ -165,14 +165,14 @@
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Invalid regitration"
           }
         },
         "security": [
           {
             "petstore_auth": [
-              "write:pets",
-              "read:pets"
+              "write:items",
+              "read:items"
             ]
           }
         ]
@@ -492,7 +492,6 @@
         "description": "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions",
         "operationId": "getOrderById",
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
@@ -529,6 +528,10 @@
       },
 
 
+
+
+
+
       "put": {
         "tags": [
           "movies"
@@ -537,7 +540,6 @@
         "description": "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions",
         "operationId": "getOrderById",
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
@@ -1295,8 +1297,8 @@
       "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
       "flow": "implicit",
       "scopes": {
-        "write:pets": "modify pets in your account",
-        "read:pets": "read your pets"
+        "write:pets": "modify items in your account",
+        "read:pets": "read your items"
       }
     },
     "api_key": {
@@ -1313,7 +1315,7 @@
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
         "name": {
           "type": "string"
@@ -1329,7 +1331,7 @@
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
         "name": {
           "type": "string"
@@ -1346,7 +1348,7 @@
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
         "title": {
           "type": "string"
@@ -1359,7 +1361,7 @@
         },
         "year": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
         "rating": {
           "type": "number",
@@ -1367,11 +1369,11 @@
         },
         "genre_id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
         "director_id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         }
       },
       "xml": {
@@ -1380,36 +1382,17 @@
     },
 
 
-
-    "Category": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "Category"
-      }
-    },
     "User": {
       "type": "object",
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
-        "username": {
+        "name": {
           "type": "string"
         },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
+        "surname": {
           "type": "string"
         },
         "email": {
@@ -1418,32 +1401,37 @@
         "password": {
           "type": "string"
         },
-        "phone": {
+        "role": {
           "type": "string"
         },
-        "userStatus": {
+        "favorite_genre": {
           "type": "integer",
-          "format": "int32",
-          "description": "User Status"
+          "format": "int",
+          "description": "favorite genre"
         }
       },
       "xml": {
         "name": "User"
       }
     },
-    "Tag": {
+
+
+
+
+    "Favorite": {
       "type": "object",
       "properties": {
-        "id": {
+        "user_id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int"
         },
-        "name": {
-          "type": "string"
+        "movie_id": {
+          "type": "integer",
+          "format": "int"
         }
       },
       "xml": {
-        "name": "Tag"
+        "name": "Favorite"
       }
     },
 
@@ -1470,68 +1458,12 @@
     },
 
 
-
-    "Pet": {
-      "type": "object",
-      "required": [
-        "name",
-        "photoUrls"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "category": {
-          "$ref": "#/definitions/Category"
-        },
-        "name": {
-          "type": "string",
-          "example": "doggie"
-        },
-        "photoUrls": {
-          "type": "array",
-          "xml": {
-            "name": "photoUrl",
-            "wrapped": true
-          },
-          "items": {
-            "type": "string"
-          }
-        },
-        "tags": {
-          "type": "array",
-          "xml": {
-            "name": "tag",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/Tag"
-          }
-        },
-        "status": {
-          "type": "string",
-          "description": "pet status in the store",
-          "enum": [
-            "available",
-            "pending",
-            "sold"
-          ]
-        }
-      },
-      "xml": {
-        "name": "Pet"
-      }
-    },
-
-
-
     "ApiResponse": {
       "type": "object",
       "properties": {
         "code": {
           "type": "integer",
-          "format": "int32"
+          "format": "int"
         },
         "type": {
           "type": "string"
